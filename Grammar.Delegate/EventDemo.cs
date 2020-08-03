@@ -10,17 +10,19 @@ namespace Grammar.Delegate
     public class EventDemo
     {
         /// <summary>
-        /// 犹豫中
+        /// 订阅
         /// </summary>
         /// <param name="item"></param>
         public static void Subscribe(Item item)
         => item.ChangeMoney += str => Console.WriteLine(str);
+
         /// <summary>
         /// 价格变动
         /// </summary>
         /// <param name="item"></param>
         /// <param name="t"></param>
         public static void Change(Item item, int t) => item.Money = t;
+
         /// <summary>
         /// 商品
         /// </summary>

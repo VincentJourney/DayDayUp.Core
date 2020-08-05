@@ -7,10 +7,10 @@ namespace MainConsole
 {
     class Program
     {
-
-        public delegate Action<RequestContext> RequestDelegete();
         static void Main(string[] args)
         {
+            #region 模拟 Middleware
+            Console.WriteLine(" ** 模拟 Middleware **");
             var context = new RequestContext() { name = "xx", id = 1 };
             IList<Func<Action<RequestContext>, Action<RequestContext>>> _pipeline
                = new List<Func<Action<RequestContext>, Action<RequestContext>>>();
@@ -41,44 +41,46 @@ namespace MainConsole
             foreach (var item in _pipeline.Reverse())
                 ac = item(ac);
             ac(context);
-            Console.ReadKey();
+            //    Console.ReadKey();
+            #endregion
 
+            #region Use MiddleWare
+            Console.WriteLine(" *** Use MiddleWare ***");
             var builder = PipelineBuilder<RequestContext>.Create(context =>
             {
                 Console.WriteLine($"{nameof(context.name)} {context.name} {nameof(context.id)} {context.id}");
             })
-                .Use((context, next) =>
-                {
-                    Console.WriteLine("1 Before");
-                    next();
-                    Console.WriteLine("1 After");
-                })
-                 .Use((context, next) =>
-                 {
-                     Console.WriteLine("2 Before");
-                     next();
-                     Console.WriteLine("2 After");
-                 })
-               // .Run((context) =>
-               //{
-               //    Console.WriteLine("3 Before");
-               //    // next();
-               //    Console.WriteLine("3 After");
-               //}).Use((context, next) =>
-               //{
-               //    Console.WriteLine("4 Before");
-               //    // next();
-               //    Console.WriteLine("4 After");
-               //})
-               ;
+              .Use((context, next) =>
+              {
+                  Console.WriteLine("1 Before");
+                  next();
+                  Console.WriteLine("1 After");
+              })
+               .Use((context, next) =>
+               {
+                   Console.WriteLine("2 Before");
+                   next();
+                   Console.WriteLine("2 After");
+               })
+             // .Run((context) =>
+             //{
+             //    Console.WriteLine("3 Before");
+             //    // next();
+             //    Console.WriteLine("3 After");
+             //}).Use((context, next) =>
+             //{
+             //    Console.WriteLine("4 Before");
+             //    // next();
+             //    Console.WriteLine("4 After");
+             //})
+             ;
 
             var app = builder.Build();
 
             app(context);
-
+            Console.ReadLine();
+            #endregion
         }
-
-
     }
 
     public class RequestContext

@@ -7,12 +7,6 @@ namespace DesignPattern.MiddleWarePattern
 {
     public class UseMiddleWare
     {
-        public class RequestContext
-        {
-            public int id { get; set; }
-            public string name { get; set; }
-        }
-
         public static void MiddleWareAnalysis()
         {
             Console.WriteLine(" ** 模拟 Middleware **");
@@ -86,5 +80,10 @@ namespace DesignPattern.MiddleWarePattern
             app(context);
             Console.ReadLine();
         }
+    }
+    public class RequestContext
+    {
+        public int id { get; set; }
+        public string name { get; set; }
     }
 }

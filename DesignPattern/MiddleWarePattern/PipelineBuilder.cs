@@ -41,10 +41,27 @@ namespace DesignPattern
 
     public static class PipeLineExtensions
     {
+        public static event Action<object> ActionExcutingEvent;
+
+        public static event Action<object> ActionExcutedEvent;
+
+        public static event Action<object> ExceptionEvent;
         public static IPipelineBuilder<TContext> Use<TContext>(this IPipelineBuilder<TContext> builder, Action<TContext, Action> action)
         {
             var build = builder.Use(next =>
-                context => action(context, () => next(context))
+                context => action(context, () =>
+                {
+                    try
+                    {
+                        ActionExcutingEvent?.Invoke(context);
+                        next(context);
+                        ActionExcutedEvent?.Invoke(context);
+                    }
+                    catch (Exception ex)
+                    {
+                        ExceptionEvent?.Invoke(ex.Message);
+                    }
+                })
                 );
             return build;
         }

@@ -1,6 +1,9 @@
-﻿using System;
+﻿using DesignPattern.MiddleWarePattern;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace DesignPattern
@@ -65,7 +68,30 @@ namespace DesignPattern
                 );
             return build;
         }
+        public static IPipelineBuilder<TContext> UseMiddleware<TContext, T>(this IPipelineBuilder<TContext> builder) where T : class
+        {
+            var MiddleWare = typeof(T);
+            if (MiddleWare.GetMethods().Where(s => s.Name == "Invoke").FirstOrDefault() == null)
+                throw new Exception("Middleware has not Invoke Method");
 
+            var Constructor = MiddleWare.GetConstructors().FirstOrDefault();
+            if (Constructor == null)
+                throw new Exception("Middleware has not Constructor");
+            //var _pipelines = builder.GetType()
+            //    .GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static)
+            //    .Where(s => s.Name == "_pipelines").FirstOrDefault();
+            //var value = _pipelines.GetValue(builder) as List<Func<Action<TContext>, Action<TContext>>>;
+            //var lastfunc = value.Last();
+            var build = builder.Use(next =>
+                context =>
+                {
+                    var instance = Constructor.Invoke(new object[] { next }) as T;
+                    var instanceInvokeMethod = instance.GetType().GetMethods().Where(s => s.Name == "Invoke").FirstOrDefault();
+                    instanceInvokeMethod.Invoke(instance, new object[] { context });
+                    //next(context);
+                });
+            return build;
+        }
         public static IPipelineBuilder<TContext> Run<TContext>(this IPipelineBuilder<TContext> builder, Action<TContext> action)
         => builder.Use(_ => action);
 
@@ -87,10 +113,7 @@ namespace DesignPattern
             });
         }
 
-        //public static IPipelineBuilder<TContext> UseMiddleware(this IPipelineBuilder<TContext> builder)
-        //{
 
 
-        //}
     }
 }

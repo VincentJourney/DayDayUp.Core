@@ -7,11 +7,11 @@ namespace DesignPattern.MiddleWarePattern
     public abstract class MiddleWareEvent
     {
         public virtual void ActionExcutingEventHanlder(object obj)
-        => Console.WriteLine("Excuting");
+        => Console.WriteLine("base Excuting");
 
         public virtual void ActionExcutedEventHanlder(object obj)
-        => Console.WriteLine("Excuted");
+        => Console.WriteLine("base Excuted");
         public virtual void ExceptionEventHanlder(object obj)
-        => Console.WriteLine("Exception");
+        => Console.WriteLine("base Exception");
     }
 }

@@ -11,9 +11,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AdvancedGrammar", "Advanced
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grammar.Generic", "Grammar.Generic\Grammar.Generic.csproj", "{41DAC982-A716-4BD9-997F-D33E745EA5C4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceCollection", "ServiceCollection\ServiceCollection.csproj", "{486C5903-15A2-428F-9A4A-A347E1F2D8A9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServiceCollection", "ServiceCollection\ServiceCollection.csproj", "{486C5903-15A2-428F-9A4A-A347E1F2D8A9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grammar.Delegate", "Grammar.Delegate\Grammar.Delegate.csproj", "{D2158AC2-E2F0-4463-820C-92F2A2DD88C4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grammar.Delegate", "Grammar.Delegate\Grammar.Delegate.csproj", "{D2158AC2-E2F0-4463-820C-92F2A2DD88C4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskUnitTest", "TaskUnitTest\TaskUnitTest.csproj", "{8F3B1DEB-656A-412A-9C5A-13FF9B66495B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +43,10 @@ Global
 		{D2158AC2-E2F0-4463-820C-92F2A2DD88C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D2158AC2-E2F0-4463-820C-92F2A2DD88C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D2158AC2-E2F0-4463-820C-92F2A2DD88C4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F3B1DEB-656A-412A-9C5A-13FF9B66495B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F3B1DEB-656A-412A-9C5A-13FF9B66495B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F3B1DEB-656A-412A-9C5A-13FF9B66495B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F3B1DEB-656A-412A-9C5A-13FF9B66495B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

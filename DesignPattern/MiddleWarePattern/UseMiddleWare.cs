@@ -56,17 +56,17 @@ namespace DesignPattern.MiddleWarePattern
             Console.WriteLine(" *** Use MiddleWare ***");
             var context = new RequestContext() { name = "xx", id = 1 };
 
-            MiddleWareBuild middleWareEvent = new MiddleWareBuild();
-            PipeLineExtensions.ActionExcutingEvent += c => middleWareEvent.ActionExcutingEventHanlder(c);
-            PipeLineExtensions.ActionExcutedEvent += c => middleWareEvent.ActionExcutedEventHanlder(c);
-            PipeLineExtensions.ExceptionEvent += c => middleWareEvent.ExceptionEventHanlder(c);
+            //MiddleWareBuild middleWareEvent = new MiddleWareBuild();
+            //PipeLineExtensions.ActionExcutingEvent += c => middleWareEvent.ActionExcutingEventHanlder(c);
+            //PipeLineExtensions.ActionExcutedEvent += c => middleWareEvent.ActionExcutedEventHanlder(c);
+            //PipeLineExtensions.ExceptionEvent += c => middleWareEvent.ExceptionEventHanlder(c);
 
             var builder = PipelineBuilder<RequestContext>.Create(context =>
             {
                 Console.WriteLine($"MainFunc {JsonConvert.SerializeObject(context)}");
-                // throw new Exception("异常");
+                throw new Exception("aa");
             });
-
+            builder.UseMiddleware<RequestContext, CustomExceptionMiddleWare>();
             builder.Use((context, next) =>
               {
                   Console.WriteLine("1 Before");
@@ -82,6 +82,7 @@ namespace DesignPattern.MiddleWarePattern
              ;
             builder.UseMiddleware<RequestContext, CustomMiddleWare>();
             builder.UseMiddleware<RequestContext, CustomMiddleWare2>();
+
             var app = builder.Build();
             app(context);
             Console.ReadLine();
@@ -98,19 +99,19 @@ namespace DesignPattern.MiddleWarePattern
     {
         public override void ActionExcutedEventHanlder(object obj)
         {
-            Console.WriteLine("ExcutedEvent" + JsonConvert.SerializeObject(obj));
+            Console.WriteLine("ExcutedEvent  =>  " + JsonConvert.SerializeObject(obj));
             base.ActionExcutedEventHanlder(obj);
         }
 
         public override void ActionExcutingEventHanlder(object obj)
         {
-            Console.WriteLine("ExcutingEvent" + JsonConvert.SerializeObject(obj));
+            Console.WriteLine("ExcutingEvent  =>  " + JsonConvert.SerializeObject(obj));
             base.ActionExcutingEventHanlder(obj);
         }
 
         public override void ExceptionEventHanlder(object obj)
         {
-            Console.WriteLine("ExceptionEvent" + JsonConvert.SerializeObject(obj));
+            Console.WriteLine("ExceptionEvent  =>  " + obj.ToString());
             base.ExceptionEventHanlder(obj);
         }
     }

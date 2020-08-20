@@ -54,29 +54,22 @@ namespace DesignPattern
             var build = builder.Use(next =>
                 context => action(context, () =>
                 {
-                    try
-                    {
-                        ActionExcutingEvent?.Invoke(context);
-                        next(context);
-                        ActionExcutedEvent?.Invoke(context);
-                    }
-                    catch (Exception ex)
-                    {
-                        ExceptionEvent?.Invoke(ex.Message);
-                    }
+                    //try
+                    //{
+                    ActionExcutingEvent?.Invoke(context);
+                    next(context);
+                    ActionExcutedEvent?.Invoke(context);
+                    //}
+                    //catch (Exception ex)
+                    //{
+                    //    ExceptionEvent?.Invoke(ex.Message);
+                    //}
                 })
                 );
             return build;
         }
         public static IPipelineBuilder<TContext> UseMiddleware<TContext, T>(this IPipelineBuilder<TContext> builder) where T : class
         {
-            var MiddleWare = typeof(T);
-            if (MiddleWare.GetMethods().Where(s => s.Name == "Invoke").FirstOrDefault() == null)
-                throw new Exception("Middleware has not Invoke Method");
-
-            var Constructor = MiddleWare.GetConstructors().FirstOrDefault();
-            if (Constructor == null)
-                throw new Exception("Middleware has not Constructor");
             //var _pipelines = builder.GetType()
             //    .GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static)
             //    .Where(s => s.Name == "_pipelines").FirstOrDefault();
@@ -85,10 +78,19 @@ namespace DesignPattern
             var build = builder.Use(next =>
                 context =>
                 {
+                    var MiddleWare = typeof(T);
+                    var Constructor = MiddleWare.GetConstructors().FirstOrDefault();
+                    var ConstructorPara = Constructor.GetParameters().Count();
+                    if (Constructor == null || ConstructorPara == 0)
+                        throw new Exception($"{MiddleWare.Name} has not Constructor");
+
                     var instance = Constructor.Invoke(new object[] { next }) as T;
+
                     var instanceInvokeMethod = instance.GetType().GetMethods().Where(s => s.Name == "Invoke").FirstOrDefault();
+                    if (instanceInvokeMethod == null)
+                        throw new Exception($"{MiddleWare.Name} has not Constructor");
+
                     instanceInvokeMethod.Invoke(instance, new object[] { context });
-                    //next(context);
                 });
             return build;
         }

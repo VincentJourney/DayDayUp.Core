@@ -18,48 +18,44 @@ namespace TaskUnitTest
                 list.Add(new Student { a = i.ToString(), b = true });
             }
             TaskListCopy(list);
+            ListCopy(list);
+            Console.ReadKey();
         }
-        private static void ListCopy(List<Student> list)
+        private void ListCopy(List<Student> list)
         {
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
-            var copylist = new List<Student>();
-            foreach (var item in list)
+            TaskExtensions.StopWatchAction(() =>
             {
-                #region sql操作
-                item.b = false;
-                copylist.Add(item);
-                Thread.Sleep(5);
-                #endregion
-            }
-            stopwatch.Stop();
-            Console.WriteLine("ListCopy" + stopwatch.Elapsed.TotalSeconds);
-            Console.WriteLine("ListCopy   " + copylist.Count());
-        }
-
-        private static void TaskListCopy(List<Student> list)
-        {
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
-            var pageList = new ConcurrentBag<Student>();
-            TaskExtensions.TaskRunWait(() =>
-            {
-                var alist = TaskExtensions.Pagination(list);
-                while (alist.Count > 0)
+                var copylist = new List<Student>();
+                foreach (var item in list)
                 {
-                    foreach (var item in alist)
-                    {
-                        #region sql操作
-                        pageList.Add(item);
-                        Thread.Sleep(5);
-                        #endregion
-                    }
-                    alist = TaskExtensions.Pagination(list);
+                    #region sql操作
+                    copylist.Add(item); Thread.Sleep(5);
+                    #endregion
                 }
-            }, needWait: false);
-            Console.WriteLine("--" + pageList.Distinct().Count());
-            stopwatch.Stop();
-            Console.WriteLine("ListCopyAsync" + stopwatch.Elapsed.TotalSeconds);
+                Console.WriteLine($"原集合中个数：{list.Count} ，ListCopyAfter个数： {copylist.Count()} ");
+            });
+        }
+        private void TaskListCopy(List<Student> list)
+        {
+            TaskExtensions.StopWatchAction(() =>
+            {
+                var pageList = new ConcurrentBag<Student>();
+                TaskExtensions.TaskRunWait(() =>
+                {
+                    var newList = list.GetByPagination();
+                    while (newList.Count() > 0)
+                    {
+                        foreach (var item in newList)
+                        {
+                            #region sql操作
+                            pageList.Add(item); Thread.Sleep(5);
+                            #endregion
+                        }
+                        newList = list.GetByPagination();
+                    }
+                });
+                Console.WriteLine($"原集合中个数：{list.Count} ，TaskListCopy个数： {pageList.Distinct().Count()} ");
+            });
         }
 
         public class Student

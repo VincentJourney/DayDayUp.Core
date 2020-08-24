@@ -24,7 +24,7 @@ namespace TaskUnitTest
         }
         private void ListCopy(List<Student> list)
         {
-            TaskExtensions.StopWatchAction(() =>
+            TaskOptimizeByPaging.StopWatchAction(() =>
             {
                 var copylist = new List<Student>();
                 foreach (var item in list)
@@ -38,29 +38,23 @@ namespace TaskUnitTest
         }
         private void TaskListCopy(List<Student> list)
         {
-            TaskExtensions.StopWatchAction(() =>
+            TaskOptimizeByPaging.StopWatchAction(() =>
             {
                 var task = Parallel.For(0, 5, i =>
                 {
                     var pageList = new ConcurrentBag<Student>();
-                    var taskr = new TaskExtensions(20);
-                    TaskExtensions.TaskRunWait(() =>
+                    var taskr = new TaskOptimizeByPaging(20);
+                    taskr.TaskRunWait(() =>
                     {
-                        var newList = taskr.GetByPagination(list);
-                        while (newList.Count() > 0)
+                        taskr.TaskRunWaitByPaging(list, s =>
                         {
-                            foreach (var item in newList)
-                            {
-                                   #region sql操作
-                                   pageList.Add(item); Thread.Sleep(5);
-                                   #endregion
-                               }
-                            newList = taskr.GetByPagination(list);
-                        }
+                            pageList.Add(s);
+                            Thread.Sleep(5);
+                        });
                     });
-                    Console.WriteLine($"原集合中个数：{list.Count} ，TaskListCopy个数： {pageList.Distinct().Count()} ");
+                    Console.WriteLine(@$"原集合中个数：{list.Count}
+TaskListCopy个数： {pageList.Distinct().Count()} ");
                 });
-
                 Console.WriteLine(task.IsCompleted);
             });
         }

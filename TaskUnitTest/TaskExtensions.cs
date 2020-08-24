@@ -7,8 +7,12 @@ using System.Threading.Tasks;
 
 namespace TaskUnitTest
 {
-    public static class TaskExtensions
+    public class TaskExtensions
     {
+        public TaskExtensions(int _pageSize)
+        {
+            pageSize = _pageSize;
+        }
         public static void TaskRunWait(Action ac, int threadNum = 10, bool needWait = true)
         {
             var taskList = new List<Task>();
@@ -20,7 +24,7 @@ namespace TaskUnitTest
             if (needWait)
                 Task.WaitAll(taskList.ToArray());
         }
-        public static List<T> GetByPagination<T>(this List<T> list)
+        public List<T> GetByPagination<T>(List<T> list)
         {
             lock (lockObj)
             {
@@ -29,8 +33,8 @@ namespace TaskUnitTest
                 return list.Skip(s).Take(pageSize).ToList();
             }
         }
-        private static int pageSize = 20;
-        private static int pageIndex = 0;
+        private int pageSize;
+        private int pageIndex = 0;
         private static readonly object lockObj = new object();
         public static void StopWatchAction(Action ac)
         {

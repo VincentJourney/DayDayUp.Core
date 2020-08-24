@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Threading;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace TaskUnitTest
 {
@@ -39,27 +40,28 @@ namespace TaskUnitTest
         {
             TaskExtensions.StopWatchAction(() =>
             {
-                var pageList = new ConcurrentBag<Student>();
-                for (int i = 0; i < 5; i++)
+                var task = Parallel.For(0, 5, i =>
                 {
+                    var pageList = new ConcurrentBag<Student>();
+                    var taskr = new TaskExtensions(20);
                     TaskExtensions.TaskRunWait(() =>
                     {
-                        var newList = list.GetByPagination();
+                        var newList = taskr.GetByPagination(list);
                         while (newList.Count() > 0)
                         {
                             foreach (var item in newList)
                             {
-                                #region sql操作
-                                pageList.Add(item); Thread.Sleep(5);
-                                #endregion
-                            }
-                            newList = list.GetByPagination();
+                                   #region sql操作
+                                   pageList.Add(item); Thread.Sleep(5);
+                                   #endregion
+                               }
+                            newList = taskr.GetByPagination(list);
                         }
                     });
+                    Console.WriteLine($"原集合中个数：{list.Count} ，TaskListCopy个数： {pageList.Distinct().Count()} ");
+                });
 
-                }
-
-                Console.WriteLine($"原集合中个数：{list.Count} ，TaskListCopy个数： {pageList.Distinct().Count()} ");
+                Console.WriteLine(task.IsCompleted);
             });
         }
 

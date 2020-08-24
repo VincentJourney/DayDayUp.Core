@@ -18,7 +18,7 @@ namespace TaskUnitTest
                 list.Add(new Student { a = i.ToString(), b = true });
             }
             TaskListCopy(list);
-            ListCopy(list);
+            //ListCopy(list);
             Console.ReadKey();
         }
         private void ListCopy(List<Student> list)
@@ -40,20 +40,25 @@ namespace TaskUnitTest
             TaskExtensions.StopWatchAction(() =>
             {
                 var pageList = new ConcurrentBag<Student>();
-                TaskExtensions.TaskRunWait(() =>
+                for (int i = 0; i < 5; i++)
                 {
-                    var newList = list.GetByPagination();
-                    while (newList.Count() > 0)
+                    TaskExtensions.TaskRunWait(() =>
                     {
-                        foreach (var item in newList)
+                        var newList = list.GetByPagination();
+                        while (newList.Count() > 0)
                         {
-                            #region sql操作
-                            pageList.Add(item); Thread.Sleep(5);
-                            #endregion
+                            foreach (var item in newList)
+                            {
+                                #region sql操作
+                                pageList.Add(item); Thread.Sleep(5);
+                                #endregion
+                            }
+                            newList = list.GetByPagination();
                         }
-                        newList = list.GetByPagination();
-                    }
-                });
+                    });
+
+                }
+
                 Console.WriteLine($"原集合中个数：{list.Count} ，TaskListCopy个数： {pageList.Distinct().Count()} ");
             });
         }

@@ -44,78 +44,57 @@ namespace DesignPattern
 
     public static class PipeLineExtensions
     {
-        public static event Action<object> ActionExcutingEvent;
-
-        public static event Action<object> ActionExcutedEvent;
-
-        public static event Action<object> ExceptionEvent;
+        /// <summary>
+        /// 添加中间件
+        /// </summary>
+        /// <typeparam name="TContext"></typeparam>
+        /// <param name="builder"></param>
+        /// <param name="action"></param>
+        /// <returns></returns>
         public static IPipelineBuilder<TContext> Use<TContext>(this IPipelineBuilder<TContext> builder, Action<TContext, Action> action)
         {
-            var build = builder.Use(next =>
-                context => action(context, () =>
-                {
-                    //try
-                    //{
-                    ActionExcutingEvent?.Invoke(context);
-                    next(context);
-                    ActionExcutedEvent?.Invoke(context);
-                    //}
-                    //catch (Exception ex)
-                    //{
-                    //    ExceptionEvent?.Invoke(ex.Message);
-                    //}
-                })
-                );
+            var build = builder.Use(next => context => action(context, () => next(context)));
             return build;
         }
+        /// <summary>
+        /// 自定义中间件，约定类中需要有invoke的方法
+        /// </summary>
+        /// <typeparam name="TContext"></typeparam>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="builder"></param>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public static IPipelineBuilder<TContext> UseMiddleware<TContext, T>(this IPipelineBuilder<TContext> builder) where T : class
         {
-            //var _pipelines = builder.GetType()
-            //    .GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static)
-            //    .Where(s => s.Name == "_pipelines").FirstOrDefault();
-            //var value = _pipelines.GetValue(builder) as List<Func<Action<TContext>, Action<TContext>>>;
-            //var lastfunc = value.Last();
             var build = builder.Use(next =>
                 context =>
                 {
                     var MiddleWare = typeof(T);
                     var Constructor = MiddleWare.GetConstructors().FirstOrDefault();
-                    var ConstructorPara = Constructor.GetParameters().Count();
-                    if (Constructor == null || ConstructorPara == 0)
+                    if (Constructor == null)
                         throw new Exception($"{MiddleWare.Name} has not Constructor");
-
+                    var ConstructorPara = Constructor.GetParameters().Count();
+                    if (ConstructorPara == 0)
+                        throw new Exception($"{MiddleWare.Name} ConstructorParams Num is 0");
+                    //可在构造函数加入参数
                     var instance = Constructor.Invoke(new object[] { next }) as T;
-
                     var instanceInvokeMethod = instance.GetType().GetMethods().Where(s => s.Name == "Invoke").FirstOrDefault();
                     if (instanceInvokeMethod == null)
-                        throw new Exception($"{MiddleWare.Name} has not Constructor");
+                        throw new Exception($"{MiddleWare.Name} has not Invoke Method");
 
                     instanceInvokeMethod.Invoke(instance, new object[] { context });
                 });
             return build;
         }
+
+        /// <summary>
+        /// 终结点中间件
+        /// </summary>
+        /// <typeparam name="TContext"></typeparam>
+        /// <param name="builder"></param>
+        /// <param name="action"></param>
+        /// <returns></returns>
         public static IPipelineBuilder<TContext> Run<TContext>(this IPipelineBuilder<TContext> builder, Action<TContext> action)
         => builder.Use(_ => action);
-
-        public static IPipelineBuilder<TContext> When<TContext>(this IPipelineBuilder<TContext> builder, Func<TContext, bool> predict, Action<IPipelineBuilder<TContext>> configureAction)
-        {
-            return builder.Use((context, next) =>
-            {
-                if (predict.Invoke(context))
-                {
-                    var branchPipelineBuilder = builder.New();
-                    configureAction(branchPipelineBuilder);
-                    var branchPipeline = branchPipelineBuilder.Build();
-                    branchPipeline.Invoke(context);
-                }
-                else
-                {
-                    next();
-                }
-            });
-        }
-
-
-
     }
 }

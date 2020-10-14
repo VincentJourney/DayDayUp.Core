@@ -62,6 +62,7 @@ namespace DesignPattern.MiddleWarePattern
             }
             catch (Exception ex)
             {
+                throw;
                 var info = GetMiddleWareException(ex);
                 var Property = context.GetType().GetProperty("ExceptionInfo");
                 Property?.SetValue(context, info);

@@ -3,7 +3,9 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using TaskUnitTest;
@@ -16,26 +18,44 @@ namespace MainConsole
         {
             #region 中间件模式，解析管道模型
             // DesignPattern.MiddleWarePattern.UseMiddleWare.MiddleWareAnalysis();
-            //   DesignPattern.MiddleWarePattern.UseMiddleWare.BuildUse();
+            //DesignPattern.MiddleWarePattern.UseMiddleWare.BuildUse();
             #endregion
 
+            //decimal aa = decimal.Round(4M / 90, 2);
+            //Console.WriteLine(aa);
+            //int.TryParse("  asdfa ", out var number);
+            //Console.WriteLine(number);
 
-            var stus = new List<Student>
-            {
-                new Student{a="1",c=1 },
-                new Student{a="2",c=2 },
-                new Student{a="3",b=false,c=3 },
+            var str = " *1231231";
+            var ints = str.IndexOf("*");
+            Console.WriteLine(ints);
+            EnumExtension.GetRuleInfos();
 
-            };
-            var stu2 = new List<Student>();
-
-            stus.AddRange(stu2);
+            Ck(null);
 
             var R01 = MainImageRuleEnum.R01;
             var R02 = MainImageRuleEnum.R02;
             var asd = R01.GetRemark().Detail;
             var asd2 = R02.GetRemark().Detail;
+
+
+            var dic = new Dictionary<Dictionary<string, int>, int>();
+            dic.Add(new Dictionary<string, int> { { "MY", 1 } }, 1);
+            dic.Add(new Dictionary<string, int> { { "MY", 1 } }, 2);
+            dic.Add(new Dictionary<string, int> { { "MY", 1 } }, 3);
+            dic.Add(new Dictionary<string, int> { { "MY", 1 } }, 4);
+
+            var s = dic;
             Console.ReadKey();
+        }
+
+        public static void Ck([NotNull] Student stu)
+        {
+
+        }
+        public static void Ck1([NotNull] Student stu)
+        {
+            //  Check.NotNull(stu, nameof(stu));
         }
     }
 
@@ -114,6 +134,21 @@ namespace MainConsole
                 Detail = a.Detail,
                 Title = a.Title
             };
+        }
+
+        public static List<RuleInfo> GetRuleInfos()
+        {
+            var result = new List<RuleInfo>();
+            var type = typeof(MainImageRuleEnum);
+            var fieldInfos = type.GetFields(BindingFlags.Static | BindingFlags.Public | BindingFlags.GetField);
+            foreach (var field in fieldInfos)
+            {
+                var value = field.GetValue(null);
+                var valueEnum = (MainImageRuleEnum)value;
+                var detail = valueEnum.GetRemark();
+                result.Add(detail);
+            }
+            return result;
         }
     }
 

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Grammar.Generic
 {
-    public abstract class People
+    public  class People
     {
         private string _name;
         public People(string Name) => _name = Name;

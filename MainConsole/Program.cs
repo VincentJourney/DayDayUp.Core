@@ -26,8 +26,9 @@ namespace MainConsole
             //int.TryParse("  asdfa ", out var number);
             //Console.WriteLine(number);
 
-            var str = " *1231231";
-            var ints = str.IndexOf("*");
+            var str = " *1231*231";
+            str = null;
+            var ints = str.Trim().IndexOf("*");
             Console.WriteLine(ints);
             EnumExtension.GetRuleInfos();
 

@@ -16,48 +16,77 @@ namespace MainConsole
     {
         static void Main(string[] args)
         {
+
+
             #region 中间件模式，解析管道模型
             // DesignPattern.MiddleWarePattern.UseMiddleWare.MiddleWareAnalysis();
-            //DesignPattern.MiddleWarePattern.UseMiddleWare.BuildUse();
+            // DesignPattern.MiddleWarePattern.UseMiddleWare.BuildUse();
             #endregion
 
-            //decimal aa = decimal.Round(4M / 90, 2);
-            //Console.WriteLine(aa);
-            //int.TryParse("  asdfa ", out var number);
-            //Console.WriteLine(number);
+            var strrr = @"<b>* SODIAL is a registered trademark. ONLY Authorized seller of SODIAL can sell under SODIAL listings.Our products will enhance your experience to unparalleled inspiration.</b> <br />SODIAL(R) 3M Solar Panel Extension Cable 10 AWG PV Wire Male Female Connector<br />Connector:<br />Maximum working current : 25A (4mm2)<br />Maximum working voltage : DC1000V<br />Contact resistance : less than equal 0.5mΩ<br />Insulation resistance :less than 500MΩ<br />single-core cable cross-section : 6mm2<br />Ambient temperature : -40 ℃ ~ + 105 ℃<br />Protection class: IP67<br />Safety class : Ⅱ<br />Pollution degree : 2<br />Operating temperature : -40 ~ +85 ℃<br />Insertion force : less than equal 50N<br />Withdrawal force : greater than equal 50N<br />Insulation Material : PC, black<br />Contact : Copper cn, sn Nickel<br />Flammability rating : UL94-VO<br />Terminal Connection: Crimp<br />Cable:<br />Nominal cross section : 6.0mm2<br />Rated Current: 70A<br />Rated Voltage:600V/1800V (AC/ DC)<br />Ambient Temperature Range:-40℃ ~ +125℃<br />Strand Design(No.x？(mm)):84 /0.30<br />Conductor diameter: 3.42mm<br />Outer diameter:7.15mm<br />Available Cable Length:3M<br />Package Contents:<br />1 x 10 AWG Solar Extension Cable With Connectors Male And Female<br />Note:Light shooting and different displays may cause the color of the item in the picture a little different from the real thing.The measurement allowed error is +/- 1-3cm.
+";
+            var separator = ":";
+            var s = strrr.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (var item in s)
+            {
+                var ass = item.Split(separator, StringSplitOptions.RemoveEmptyEntries);
+            }
+            short? aa = 1;
 
-            var str = " *1231*231";
-            str = null;
-            var ints = str.Trim().IndexOf("*");
-            Console.WriteLine(ints);
-            EnumExtension.GetRuleInfos();
+            int? bb = null;
+            aa = (short?)bb;
 
-            Ck(null);
+            var result = EnumExtension.GetRuleInfos();
+            var result1 = result.Where(s => s.Id == 1).Select(s => s.Title).OrderByDescending(s => s).ToList();
+            MainImageRuleEnum.R01.GetRemark();
 
-            var R01 = MainImageRuleEnum.R01;
-            var R02 = MainImageRuleEnum.R02;
-            var asd = R01.GetRemark().Detail;
-            var asd2 = R02.GetRemark().Detail;
+            B b = new B();
+            A a = new A();
+            a.Fun2(b);
+            b.Fun2(a);
 
-
-            var dic = new Dictionary<Dictionary<string, int>, int>();
-            dic.Add(new Dictionary<string, int> { { "MY", 1 } }, 1);
-            dic.Add(new Dictionary<string, int> { { "MY", 1 } }, 2);
-            dic.Add(new Dictionary<string, int> { { "MY", 1 } }, 3);
-            dic.Add(new Dictionary<string, int> { { "MY", 1 } }, 4);
-
-            var s = dic;
             Console.ReadKey();
-        }
-
-        public static void Ck([NotNull] Student stu)
-        {
 
         }
-        public static void Ck1([NotNull] Student stu)
+        private static int Lindexi()
         {
-            //  Check.NotNull(stu, nameof(stu));
+            return 2;
         }
+
+        class Foo
+        {
+            public int N
+            {
+                get
+                {
+                    Console.WriteLine("Hi.");
+                    return 1;
+                }
+            }
+        }
+    }
+
+    public class B : A
+    {
+        public B() { count++; }
+
+        public override void Fun1(int i)
+        {
+            base.Fun1(i + count);
+        }
+
+    }
+    public class A
+    {
+
+        protected static int count = 1;
+        static A()
+        {
+            count++;
+        }
+
+        public virtual void Fun1(int i) { Console.WriteLine(i); }
+        public void Fun2(A a) { a.Fun1(5); Fun1(2); }
     }
 
     public class Student

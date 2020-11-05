@@ -66,29 +66,23 @@ namespace DesignPattern.MiddleWarePattern
                 //  throw new Exception("aa");
             });
             builder.UseMiddleware<RequestContext<CheckProductMode>, CustomExceptionMiddleWare<RequestContext<CheckProductMode>>>();
-            builder.Use((context, next) =>
-              {
-                  Console.WriteLine("1 Before");
-                  next();
-                  Console.WriteLine("1 After");
-              })
-             .Use((context, next) =>
-             {
-                 Console.WriteLine("2 Before");
-                 next();
-                 Console.WriteLine("2 After");
-             });
+            //builder.Use((context, next) =>
+            //  {
+            //      Console.WriteLine("1 Before");
+            //      next();
+            //      Console.WriteLine("1 After");
+            //  })
+            // .Use((context, next) =>
+            // {
+            //     Console.WriteLine("2 Before");
+            //     next();
+            //     Console.WriteLine("2 After");
+            // });
             builder.UseMiddleware<RequestContext<CheckProductMode>, CustomMiddleWare>();
             builder.UseMiddleware<RequestContext<CheckProductMode>, CustomMiddleWare2>();
 
             var app = builder.Build();
-
-            for (var i = 0; i < 5; i++)
-            {
-                app(context);
-              //  Console.WriteLine(context.ExceptionInfo.Message);
-            }
-
+            app(context);
 
 
             Console.ReadLine();
@@ -97,7 +91,7 @@ namespace DesignPattern.MiddleWarePattern
     }
     public class RequestContext<T>
     {
-         public MiddleWareExceptionInfo ExceptionInfo { get; set; }
+        public MiddleWareExceptionInfo ExceptionInfo { get; set; }
         public T Mode { get; set; }
     }
     public class CheckProductMode

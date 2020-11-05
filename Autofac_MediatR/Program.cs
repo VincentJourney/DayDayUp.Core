@@ -13,9 +13,8 @@ namespace Autofac_MediatR
     {
         static void Main(string[] args)
         {
-            AutofacContainer.Build();
-            IPeople p = AutofacContainer.Instance.Resolve<IPeople>();
-            p.Run();
+            IPeople people = AutofacContainer.Instance.Resolve<IPeople>();
+            people.Run();
             Console.ReadKey();
         }
 

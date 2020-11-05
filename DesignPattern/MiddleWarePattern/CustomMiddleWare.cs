@@ -16,12 +16,17 @@ namespace DesignPattern.MiddleWarePattern
         }
         public void Invoke(RequestContext<CheckProductMode> context)
         {
-
+            if (1 == 2)
+            {
+                throw new Exception("12312321");
+            }
             Console.WriteLine("CustomMiddleWare Before");
             //  throw new BException("test");
-           // throw new Exception("12312321");
+            // throw new Exception("12312321");
             _next(context);
+
             Console.WriteLine("CustomMiddleWare After");
+            return;
         }
     }
 

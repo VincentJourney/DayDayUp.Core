@@ -61,7 +61,7 @@ namespace Autofac_MediatR
         private static string GetLogFilePathByLogLevel(LogEventLevel logEventLevel)
         {
             var datetimeNow = DateTime.Now;
-            return $"Log/{logEventLevel.ToString()}/{datetimeNow.Year}-{datetimeNow.Month}/Day{datetimeNow.Day}/Hour_{datetimeNow.Hour}.log";
+            return $"Log/{logEventLevel.ToString()}/{datetimeNow.Year}-{datetimeNow.Month}/Day{datetimeNow.Day}/log.log";
         }
     }
 }

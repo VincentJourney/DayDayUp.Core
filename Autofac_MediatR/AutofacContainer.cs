@@ -14,17 +14,32 @@ namespace Autofac_MediatR
     /// </summary>
     public static class AutofacContainer
     {
+        private readonly static Object buildLock = new Object();
+        static AutofacContainer()
+        {
+            if (Instance == null)
+            {
+                lock (buildLock)
+                {
+                    if (Instance == null)
+                    {
+                        Console.WriteLine(1);
+                        Instance = new ContainerBuilder().AddCustomModule().Build();
+                    }
+                }
+            }
+        }
         /// <summary>
         /// 容器
         /// </summary>
         public static IContainer Instance;
 
-        /// <summary>
-        /// 初始化容器
-        /// </summary>
-        /// <returns></returns>
-        public static void Build()
-        => Instance = new ContainerBuilder().AddCustomModule().Build();
+        ///// <summary>
+        ///// 初始化容器
+        ///// </summary>
+        ///// <returns></returns>
+        //public static void Build()
+        //=> Instance = new ContainerBuilder().AddCustomModule().Build();
 
         /// <summary>
         /// 注入自定义模块

@@ -2,8 +2,8 @@
 
 namespace Autofac_MediatR
 {
-    public class CustomRequest : IRequest<string>
+    public class CustomRequest : IRequest
     {
-        public string a { get; set; }
+        public int a { get; set; }
     }
 }

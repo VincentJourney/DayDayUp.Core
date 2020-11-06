@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Autofac;
+using MediatR;
 using Serilog;
 using Serilog.Events;
 
@@ -14,6 +15,7 @@ namespace Autofac_MediatR
         static void Main(string[] args)
         {
             IPeople people = AutofacContainer.Instance.Resolve<IPeople>();
+            var c = AutofacContainer.Instance.Resolve<IMediator>();
             people.Run();
             Console.ReadKey();
         }

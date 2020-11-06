@@ -57,7 +57,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AsyncPublisher.cs" />
     <Compile Include="AutofacContainer.cs" />
+    <Compile Include="CustomMediator.cs" />
     <Compile Include="Meditor\Handler\CustomHandler.cs" />
     <Compile Include="Meditor\Command\CustomNotification.cs" />
     <Compile Include="Meditor\Handler\CustomNotificationHandler.cs" />
@@ -68,6 +70,7 @@
     <Compile Include="People.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PublishStrategy.cs" />
     <Compile Include="Student.cs" />
   </ItemGroup>
   <ItemGroup>

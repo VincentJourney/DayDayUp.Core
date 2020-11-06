@@ -16,19 +16,32 @@ namespace Autofac_MediatR
     public class Student : IStudent
     {
         private readonly IMediator _mediator;
+        private readonly AsyncPublisher _asyncPublisher;
         private readonly ILogger _logger;
-        public Student(IMediator mediator, ILogger logger)
+        public Student(IMediator mediator, ILogger logger, AsyncPublisher asyncPublisher)
         {
             _mediator = mediator;
             _logger = logger;
+            _asyncPublisher = asyncPublisher;
         }
         public async Task Study(string name)
         {
             try
             {
-                var a = await _mediator.Send(new CustomRequest { a = "hah" });
-                _mediator.Publish(new CustomNotification { MsgId = "1" });
-                throw new Exception("test");
+                Console.WriteLine("_mediator.Send");
+                var list = new List<CustomRequest> {
+                    new CustomRequest { a = 1 },
+                    new CustomRequest { a = 2 },
+                    new CustomRequest { a = 3 },
+                };
+                await _mediator.SendAsync(list, async: true);
+
+                Console.WriteLine("_asyncPublisher.Publish");
+                await _asyncPublisher.Publish(new CustomNotification { MsgId = "1" }, PublishStrategy.ParallelNoWait);
+
+                Console.WriteLine("_mediator.Publish");
+                await _mediator.Publish(new CustomNotification { MsgId = "1" });
+                //throw new Exception("test");
             }
             catch (Exception ex)
             {

@@ -12,7 +12,7 @@ namespace Autofac_MediatR
     {
         public async Task Handle(CustomNotification notification, CancellationToken cancellationToken)
         {
-            Task.Delay(3000);
+            await Task.Delay(3000);
             Console.WriteLine($"{notification.MsgId},{Thread.CurrentThread.ManagedThreadId}");
         }
     }
@@ -21,13 +21,16 @@ namespace Autofac_MediatR
     {
         public async Task Handle(CustomNotification notification, CancellationToken cancellationToken)
         {
+            await Task.Delay(3000);
             Console.WriteLine($"{notification.MsgId},{Thread.CurrentThread.ManagedThreadId}");
         }
     }
+
     public class CustomNotificationHandler3 : INotificationHandler<CustomNotification>
     {
         public async Task Handle(CustomNotification notification, CancellationToken cancellationToken)
         {
+            await Task.Delay(3000);
             Console.WriteLine($"{notification.MsgId},{Thread.CurrentThread.ManagedThreadId}");
         }
     }

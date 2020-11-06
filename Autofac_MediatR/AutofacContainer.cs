@@ -23,7 +23,6 @@ namespace Autofac_MediatR
                 {
                     if (Instance == null)
                     {
-                        Console.WriteLine(1);
                         Instance = new ContainerBuilder().AddCustomModule().Build();
                     }
                 }
@@ -33,13 +32,6 @@ namespace Autofac_MediatR
         /// 容器
         /// </summary>
         public static IContainer Instance;
-
-        ///// <summary>
-        ///// 初始化容器
-        ///// </summary>
-        ///// <returns></returns>
-        //public static void Build()
-        //=> Instance = new ContainerBuilder().AddCustomModule().Build();
 
         /// <summary>
         /// 注入自定义模块

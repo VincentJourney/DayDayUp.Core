@@ -7,37 +7,50 @@ using System.Threading.Tasks;
 namespace Autofac_MediatR
 {
     /// <summary>
-    /// Strategy to use when publishing notifications
+    /// 发布策略
     /// </summary>
     public enum PublishStrategy
     {
         /// <summary>
-        /// Run each notification handler after one another. Returns when all handlers are finished. In case of any exception(s), they will be captured in an AggregateException.
+        /// 同步发布
+        /// 当所有处理程序完成时返回
+        /// 遇到异常后继续执行，Exception is AggregateException
         /// </summary>
         SyncContinueOnException = 0,
 
         /// <summary>
-        /// Run each notification handler after one another. Returns when all handlers are finished or an exception has been thrown. In case of an exception, any handlers after that will not be run.
+        /// 同步发布
+        /// 当所有处理程序完成时或异常时返回
+        /// 遇到异常后停止执行，Exception is AggregateException
         /// </summary>
         SyncStopOnException = 1,
 
         /// <summary>
-        /// Run all notification handlers asynchronously. Returns when all handlers are finished. In case of any exception(s), they will be captured in an AggregateException.
+        /// 异步发布
+        /// 当所有处理程序完成时返回
+        /// 遇到异常后继续消费后续消息
+        /// Exception is AggregateException
         /// </summary>
         Async = 2,
 
         /// <summary>
-        /// Run each notification handler on it's own thread using Task.Run(). Returns immediately and does not wait for any handlers to finish. Note that you cannot capture any exceptions, even if you await the call to Publish.
+        /// 异步发布
+        /// 无等待
+        /// 无异常
         /// </summary>
         ParallelNoWait = 3,
 
         /// <summary>
-        /// Run each notification handler on it's own thread using Task.Run(). Returns when all threads (handlers) are finished. In case of any exception(s), they are captured in an AggregateException by Task.WhenAll.
+        /// 异步发布
+        /// 等待所有消息消费完成
+        /// 消费所有消息后，抛出异常
         /// </summary>
         ParallelWhenAll = 4,
 
         /// <summary>
-        /// Run each notification handler on it's own thread using Task.Run(). Returns when any thread (handler) is finished. Note that you cannot capture any exceptions (See msdn documentation of Task.WhenAny)
+        /// 异步发布
+        /// 等待直到某一消息消费完成
+        /// 无异常
         /// </summary>
         ParallelWhenAny = 5,
     }

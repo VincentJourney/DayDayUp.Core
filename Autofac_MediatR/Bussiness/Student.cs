@@ -28,20 +28,51 @@ namespace Autofac_MediatR
         {
             try
             {
-                Console.WriteLine("_mediator.Send");
-                var list = new List<CustomRequest> {
+
+                var list = new List<CustomRequest>
+                {
                     new CustomRequest { a = 1 },
                     new CustomRequest { a = 2 },
                     new CustomRequest { a = 3 },
                 };
-                await _mediator.SendAsync(list, async: true);
+                //单播
+                Console.WriteLine("_mediator.Send");
+                await _mediator.Send(list.FirstOrDefault());
 
+                Console.WriteLine("_mediator.SendAllAsync");
+                //异步广播
+                try
+                {
+                    await _mediator.SendAllAsync(list);
+                }
+                catch (AggregateException ex)
+                {
+                    var exM = string.Join(",", ex.InnerExceptions.Select(s => s.Message));
+                    Console.WriteLine(exM);
+                }
+
+                Console.WriteLine("_mediator.SendAll");
+                //同步广播
+                await _mediator.SendAll(list);
+
+                //异步发布订阅
                 Console.WriteLine("_asyncPublisher.Publish");
-                await _asyncPublisher.Publish(new CustomNotification { MsgId = "1" }, PublishStrategy.ParallelNoWait);
+                try
+                {
+                    await _asyncPublisher.Publish(new CustomNotification { MsgId = "1" }, PublishStrategy.ParallelNoWait);
+                }
+                catch (AggregateException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
 
-                Console.WriteLine("_mediator.Publish");
+                //同步发布订阅
+                Console.WriteLine("_mediator.PublishOne");
                 await _mediator.Publish(new CustomNotification { MsgId = "1" });
-                //throw new Exception("test");
             }
             catch (Exception ex)
             {

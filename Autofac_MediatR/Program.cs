@@ -15,10 +15,8 @@ namespace Autofac_MediatR
         static void Main(string[] args)
         {
             IPeople people = AutofacContainer.Instance.Resolve<IPeople>();
-            var c = AutofacContainer.Instance.Resolve<IMediator>();
             people.Run();
             Console.ReadKey();
         }
-
     }
 }

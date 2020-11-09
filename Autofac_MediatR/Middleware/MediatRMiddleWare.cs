@@ -23,9 +23,9 @@ namespace Autofac_MediatR
                 return t => c.TryResolve(t, out var o) ? o : null;
             }).InstancePerLifetimeScope();
 
-            builder.Register<Func<IEnumerable<Task>, Task>>(c =>
+            builder.Register<Func<IEnumerable<Task>, Task>>(context =>
             {
-                var context = c.Resolve<IComponentContext>();
+                //var c = context.Resolve<IComponentContext>();
                 return async tasks =>
                 {
                     foreach (Task task in tasks)
@@ -38,7 +38,6 @@ namespace Autofac_MediatR
             builder.RegisterType<AsyncPublisher>().SingleInstance();
             builder.RegisterType<CustomMediator>().As<IMediator>();
             builder.RegisterType<Mediator>().As<IMediator>();
-
             builder.RegisterAssemblyTypes(typeof(Program).GetTypeInfo().Assembly).AsImplementedInterfaces();
 
             return builder;

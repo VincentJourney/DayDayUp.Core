@@ -58,6 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Autofac\AutofacContainer.cs" />
+    <Compile Include="Meditor\Extensions\IMediatorExtionsens.cs" />
     <Compile Include="Meditor\Extensions\CustomMediator.cs" />
     <Compile Include="Meditor\Extensions\AsyncPublisher.cs" />
     <Compile Include="Meditor\Handler\CustomHandler.cs" />

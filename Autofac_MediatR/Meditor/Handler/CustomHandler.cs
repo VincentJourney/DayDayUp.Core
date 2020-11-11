@@ -10,8 +10,7 @@ namespace Autofac_MediatR
     {
         protected override async Task Handle(CustomRequest request, CancellationToken cancellationToken)
         {
-            throw new System.Exception("1");
-            Thread.Sleep(2000);
+            Thread.Sleep(5000);
             System.Console.WriteLine(request.a);
         }
     }

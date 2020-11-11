@@ -12,7 +12,6 @@ namespace Autofac_MediatR
     {
         public async Task Handle(CustomNotification notification, CancellationToken cancellationToken)
         {
-            throw new Exception("嘻嘻1");
             await Task.Delay(3000);
             Console.WriteLine($"{notification.MsgId},{Thread.CurrentThread.ManagedThreadId}");
         }
@@ -30,7 +29,6 @@ namespace Autofac_MediatR
     {
         public async Task Handle(CustomNotification notification, CancellationToken cancellationToken)
         {
-            throw new Exception("嘻嘻3");
             await Task.Delay(3000);
             Console.WriteLine($"{notification.MsgId},{Thread.CurrentThread.ManagedThreadId}");
         }

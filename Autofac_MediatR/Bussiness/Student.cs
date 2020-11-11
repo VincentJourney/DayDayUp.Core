@@ -35,44 +35,44 @@ namespace Autofac_MediatR
                     new CustomRequest { a = 2 },
                     new CustomRequest { a = 3 },
                 };
-                //单播
-                Console.WriteLine("_mediator.Send");
-                await _mediator.Send(list.FirstOrDefault());
+                ////单播
+                //Console.WriteLine("_mediator.Send");
+                _mediator.Send(list.FirstOrDefault());
+                Console.WriteLine("zasdasd");
+                //Console.WriteLine("_mediator.SendAllAsync");
+                ////异步广播
+                //try
+                //{
+                //    await _mediator.SendAllAsync(list);
+                //}
+                //catch (AggregateException ex)
+                //{
+                //    var exM = string.Join(",", ex.InnerExceptions.Select(s => s.Message));
+                //    Console.WriteLine(exM);
+                //}
 
-                Console.WriteLine("_mediator.SendAllAsync");
-                //异步广播
-                try
-                {
-                    await _mediator.SendAllAsync(list);
-                }
-                catch (AggregateException ex)
-                {
-                    var exM = string.Join(",", ex.InnerExceptions.Select(s => s.Message));
-                    Console.WriteLine(exM);
-                }
+                //Console.WriteLine("_mediator.SendAll");
+                ////同步广播
+                //await _mediator.SendAll(list);
 
-                Console.WriteLine("_mediator.SendAll");
-                //同步广播
-                await _mediator.SendAll(list);
-
-                //异步发布订阅
-                Console.WriteLine("_asyncPublisher.Publish");
-                try
-                {
-                    await _asyncPublisher.Publish(new CustomNotification { MsgId = "1" }, PublishStrategy.ParallelNoWait);
-                }
-                catch (AggregateException ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
-
+                ////异步发布订阅
+                //Console.WriteLine("_asyncPublisher.Publish");
+                //try
+                //{
+                //    await _asyncPublisher.Publish(new CustomNotification { MsgId = "1" }, PublishStrategy.ParallelNoWait);
+                //}
+                //catch (AggregateException ex)
+                //{
+                //    Console.WriteLine(ex.Message);
+                //}
+                //catch (Exception ex)
+                //{
+                //    Console.WriteLine(ex.Message);
+                //}
+                throw new Exception("aaa");
                 //同步发布订阅
-                Console.WriteLine("_mediator.PublishOne");
-                await _mediator.Publish(new CustomNotification { MsgId = "1" });
+                //Console.WriteLine("_mediator.PublishOne");
+                //await _mediator.Publish(new CustomNotification { MsgId = "1" });
             }
             catch (Exception ex)
             {

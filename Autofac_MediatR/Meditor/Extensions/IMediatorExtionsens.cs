@@ -38,6 +38,35 @@ namespace Autofac_MediatR
             }
         }
 
+        public static async Task SendAllAsyncByPagination(this IMediator mediator, IEnumerable<IRequest> requests, int PageSize = 20, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var requestsCount = requests.Count();
+            var exceptions = new List<Exception>();
+            Parallel.ForEach(requests, async request =>
+            {
+                try
+                {
+                    await mediator.Send(request, cancellationToken).ConfigureAwait(false);
+                }
+                catch (Exception ex)
+                {
+                    exceptions.Add(ex);
+                }
+            });
+            if (exceptions.Any())
+            {
+                throw new AggregateException(exceptions);
+            }
+        }
+        //public IEnumerable<T> GetListByPagination<T>(IEnumerable<T> list)
+        //{
+        //    lock (lockObj)
+        //    {
+        //        var s = list.Skip(pageIndex * pageSize).Take(pageSize);
+        //        pageIndex++;
+        //        return s;
+        //    }
+        //}
         /// <summary>
         /// 同步发送多条消息，无返回值
         /// </summary>

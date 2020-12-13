@@ -18,7 +18,11 @@ namespace Grammar.Generic
 
         }
 
+        interface ITestIn<in People> { }
 
+        class TestIn : ITestIn<People> { }
+        class TestIn2 : ITestIn<Student> { }
+        class TestIn3 : ITestIn<Apple> { }
         /// <summary>
         /// 逆变 in 关键字   进（只限制为入参）
         /// 1，泛型参数定义的类型只能作为方法参数的类型，不能作为返回值类型
@@ -28,13 +32,13 @@ namespace Grammar.Generic
         public static void Test_in()
         {
             Student s = new Student("Test_in");
+            People p = new People("Test_in");
             Action<People> actionPeople = t => t.CallMyName();
             Action<Student> actionStudent = actionPeople;
-            actionStudent(s);
-
-            //Action<string> action3 = t => { Console.WriteLine(t.GetType()); };
-            //Action<object> action4 = action3;
-
+             actionPeople = actionStudent;
+            actionPeople(s);
+            actionPeople(p);
+            //actionStudent(p);
         }
 
         /// <summary>

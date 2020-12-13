@@ -60,30 +60,19 @@ namespace DesignPattern.MiddleWarePattern
             //PipeLineExtensions.ActionExcutingEvent += c => middleWareEvent.ActionExcutingEventHanlder(c);
             //PipeLineExtensions.ActionExcutedEvent += c => middleWareEvent.ActionExcutedEventHanlder(c);
             //PipeLineExtensions.ExceptionEvent += c => middleWareEvent.ExceptionEventHanlder(c);
+
             var builder = PipelineBuilder<RequestContext<CheckProductMode>>.Create(context =>
             {
-                Console.WriteLine($" MainFunc {JsonConvert.SerializeObject(context)}");
-                //  throw new Exception("aa");
+               
             });
             builder.UseMiddleware<RequestContext<CheckProductMode>, CustomExceptionMiddleWare<RequestContext<CheckProductMode>>>();
-            //builder.Use((context, next) =>
-            //  {
-            //      Console.WriteLine("1 Before");
-            //      next();
-            //      Console.WriteLine("1 After");
-            //  })
-            // .Use((context, next) =>
-            // {
-            //     Console.WriteLine("2 Before");
-            //     next();
-            //     Console.WriteLine("2 After");
-            // });
             builder.UseMiddleware<RequestContext<CheckProductMode>, CustomMiddleWare>();
             builder.UseMiddleware<RequestContext<CheckProductMode>, CustomMiddleWare2>();
 
             var app = builder.Build();
-            app(context);
 
+            app(context);
+            Console.WriteLine(context.ExceptionInfo.Message);
 
             Console.ReadLine();
         }

@@ -25,7 +25,7 @@ namespace ServiceCollection
         /// <summary>
         /// 构造
         /// </summary>
-        /// <typeparam name="T">需构造的细节类型</typeparam>
+        /// <typeparam name="T">需构造的类型</typeparam>
         /// <returns></returns>
         public T Resolve<T>()
         {

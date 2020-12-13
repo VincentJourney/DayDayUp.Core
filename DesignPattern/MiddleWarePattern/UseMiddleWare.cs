@@ -15,7 +15,8 @@ namespace DesignPattern.MiddleWarePattern
             var context = new RequestContext() { name = "xx", id = 1 };
 
             MiddleWareBuild middleWareEvent = new MiddleWareBuild();
-            PipeLineExtensions.ActionExcutingEvent += c => middleWareEvent.ActionExcutingEventHanlder(c);
+            Action<object> action = (a) => middleWareEvent.ActionExcutingEventHanlder(a);
+            PipeLineExtensions.ActionExcutingEvent += action;
             PipeLineExtensions.ActionExcutedEvent += c => middleWareEvent.ActionExcutedEventHanlder(c);
             PipeLineExtensions.ExceptionEvent += c => middleWareEvent.ExceptionEventHanlder(c);
 
@@ -61,11 +62,10 @@ namespace DesignPattern.MiddleWarePattern
             //PipeLineExtensions.ActionExcutedEvent += c => middleWareEvent.ActionExcutedEventHanlder(c);
             //PipeLineExtensions.ExceptionEvent += c => middleWareEvent.ExceptionEventHanlder(c);
 
-            var builder = PipelineBuilder<RequestContext>.Create(context =>
-            {
-                Console.WriteLine($"MainFunc {JsonConvert.SerializeObject(context)}");
-                throw new Exception("aa");
-            });
+            Action<RequestContext> action = context => Console.WriteLine($"MainFunc {JsonConvert.SerializeObject(context)}");
+
+            var builder = PipelineBuilder<RequestContext>.Create(action);
+
             builder.UseMiddleware<RequestContext, CustomExceptionMiddleWare>();
             builder.Use((context, next) =>
               {
@@ -79,9 +79,13 @@ namespace DesignPattern.MiddleWarePattern
                  next();
                  Console.WriteLine("2 After");
              })
-             ;
-            builder.UseMiddleware<RequestContext, CustomMiddleWare>();
-            builder.UseMiddleware<RequestContext, CustomMiddleWare2>();
+            //.Run(context =>
+            //{
+            //    Console.WriteLine("终结点");
+            //});
+            ;
+            //builder.UseMiddleware<RequestContext, CustomMiddleWare>();
+            //builder.UseMiddleware<RequestContext, CustomMiddleWare2>();
 
             var app = builder.Build();
             app(context);

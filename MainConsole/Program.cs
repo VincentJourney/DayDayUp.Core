@@ -26,7 +26,7 @@ namespace MainConsole
 
             #region 中间件模式，解析管道模型
             // DesignPattern.MiddleWarePattern.UseMiddleWare.MiddleWareAnalysis();
-            // DesignPattern.MiddleWarePattern.UseMiddleWare.BuildUse();
+            DesignPattern.MiddleWarePattern.UseMiddleWare.BuildUse();
             #endregion
 
             //var stus = new Student();

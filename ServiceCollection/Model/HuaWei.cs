@@ -8,6 +8,10 @@ namespace ServiceCollection
         {
             Console.WriteLine($"{this.GetType().Name}需要{power.GetType().Name}");
         }
+        public HuaWei()
+        {
+            Console.WriteLine($"{this.GetType().Name}");
+        }
 
         public void Call()
         {

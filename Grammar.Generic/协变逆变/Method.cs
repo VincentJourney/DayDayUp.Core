@@ -34,8 +34,8 @@ namespace Grammar.Generic
             Student s = new Student("Test_in");
             People p = new People("Test_in");
             Action<People> actionPeople = t => t.CallMyName();
-            Action<Student> actionStudent = actionPeople;
-             actionPeople = actionStudent;
+            //Action<Student> actionStudent = actionPeople;
+            // actionPeople = actionStudent;
             actionPeople(s);
             actionPeople(p);
             //actionStudent(p);

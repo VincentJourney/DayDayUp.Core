@@ -15,14 +15,12 @@ namespace Dispatcher
         private readonly MethodExecutor _executor;
         public MethodInfo MethodInfo { get; }
         public ParameterInfo[] MethodParameters { get; }
-
         public TypeInfo TargetTypeInfo { get; }
         public Type MethodReturnType { get; internal set; }
         public static ObjectMethodExecutor Create(MethodInfo methodInfo, TypeInfo targetTypeInfo)
         {
             return new ObjectMethodExecutor(methodInfo, targetTypeInfo, null);
         }
-
 
         private ObjectMethodExecutor(MethodInfo methodInfo, TypeInfo targetTypeInfo, object[] parameterDefaultValues)
         {
@@ -35,7 +33,6 @@ namespace Dispatcher
             MethodParameters = methodInfo.GetParameters();
             TargetTypeInfo = targetTypeInfo;
             MethodReturnType = methodInfo.ReturnType;
-
 
             // Upstream code may prefer to use the sync-executor even for async methods, because if it knows
             // that the result is a specific Task<T> where T is known, then it can directly cast to that type
@@ -92,6 +89,5 @@ namespace Dispatcher
         }
 
         public object Execute(object target, params object[] parameters) => _executor(target, parameters);
-
     }
 }

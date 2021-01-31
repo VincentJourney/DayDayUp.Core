@@ -22,10 +22,7 @@ namespace Dispatcher
             var reflectedType = methodInfo.ReflectedType.Name;
             var key = $"{methodInfo.Module.Name}_{reflectedType}_{methodInfo.MetadataToken}";
             var executor = _executors.GetOrAdd(key, x => ObjectMethodExecutor.Create(methodInfo, context.ImplTypeInfo));
-
-            //context.
             var obj = Activator.CreateInstance(context.ImplTypeInfo);
-
             return executor.Execute(obj, null);
         }
     }

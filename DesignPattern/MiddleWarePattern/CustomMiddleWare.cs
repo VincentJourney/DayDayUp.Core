@@ -18,11 +18,16 @@ namespace DesignPattern.MiddleWarePattern
         {
             Console.WriteLine("CustomMiddleWare Before");
 
+            if (context.Mode.AliexpressRule != "1")
+            {
+                _next(context);
+                return;
+            }
+
             _next(context);
-            //   throw new BException("123");
+            return;
 
             Console.WriteLine("CustomMiddleWare After");
-            return;
         }
     }
 
@@ -37,11 +42,40 @@ namespace DesignPattern.MiddleWarePattern
         {
             Console.WriteLine("CustomMiddleWare2 Before");
 
+            if (context.Mode.AliexpressRule == "1")
+            {
+                //_next(context);
+                return;
+            }
             _next(context);
-            //throw new Exception("123");
+
             Console.WriteLine("CustomMiddleWare2 After");
         }
     }
+
+
+    public class CustomMiddleWare3
+    {
+        private readonly Action<RequestContext<CheckProductMode>> _next;
+        public CustomMiddleWare3(Action<RequestContext<CheckProductMode>> next)
+        {
+            _next = next;
+        }
+        public void Invoke(RequestContext<CheckProductMode> context)
+        {
+            Console.WriteLine("CustomMiddleWare2 Before");
+
+            if (context.Mode.AliexpressRule != "1")
+            {
+                _next(context);
+                return;
+            }
+            _next(context);
+
+            Console.WriteLine("CustomMiddleWare2 After");
+        }
+    }
+
     /// <summary>
     /// 通用异常类
     /// </summary>

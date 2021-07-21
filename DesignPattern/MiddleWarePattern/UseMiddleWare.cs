@@ -63,16 +63,17 @@ namespace DesignPattern.MiddleWarePattern
 
             var builder = PipelineBuilder<RequestContext<CheckProductMode>>.Create(context =>
             {
-               
+
             });
             builder.UseMiddleware<RequestContext<CheckProductMode>, CustomExceptionMiddleWare<RequestContext<CheckProductMode>>>();
             builder.UseMiddleware<RequestContext<CheckProductMode>, CustomMiddleWare>();
             builder.UseMiddleware<RequestContext<CheckProductMode>, CustomMiddleWare2>();
+            builder.UseMiddleware<RequestContext<CheckProductMode>, CustomMiddleWare3>();
 
             var app = builder.Build();
 
             app(context);
-            Console.WriteLine(context.ExceptionInfo.Message);
+            Console.WriteLine(JsonConvert.SerializeObject(context));
 
             Console.ReadLine();
         }

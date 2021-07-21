@@ -14,13 +14,16 @@ namespace Dispatcher
         {
             _receivedChannel = Channel.CreateUnbounded<ConsumerExecutorDescriptor>();
             _executor = subscribeInvoker;
-            Task.WhenAll(Enumerable.Range(0, 1)
-             .Select(_ => Task.Factory.StartNew(Processing, CancellationToken.None, TaskCreationOptions.LongRunning, TaskScheduler.Default)).ToArray());
+            Task.WhenAll(
+                Enumerable.Range(0, 2)
+                .Select(_ =>
+                            Task.Factory.StartNew(Processing,
+                            CancellationToken.None, TaskCreationOptions.LongRunning, TaskScheduler.Default))
+                .ToArray());
         }
 
         public void Push(ConsumerExecutorDescriptor consumerExecutorDescriptor)
         {
-            //await _receivedChannel.Writer.WaitToWriteAsync();
             _receivedChannel.Writer.TryWrite(consumerExecutorDescriptor);
         }
 
@@ -30,6 +33,8 @@ namespace Dispatcher
             {
                 await foreach (var item in _receivedChannel.Reader.ReadAllAsync())
                 {
+                    Console.WriteLine(_receivedChannel.Reader.CanCount);
+                    Console.WriteLine(_receivedChannel.Reader.GetHashCode());
                     _executor.Invoke(item);
                 }
                 //while (await _receivedChannel.Reader.WaitToReadAsync())

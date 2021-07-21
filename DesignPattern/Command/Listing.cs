@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DesignPattern.Command
 {
     public abstract class Listing
     {
 
-    public void Execute()
+        public void Execute()
         {
             CreateBaseInfo();
             CreateSku();

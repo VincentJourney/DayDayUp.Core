@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CoupangApi\CoupangApi.csproj" />
     <ProjectReference Include="..\DesignPattern\DesignPattern.csproj" />
     <ProjectReference Include="..\TaskUnitTest\TaskUnitTest.csproj" />
   </ItemGroup>

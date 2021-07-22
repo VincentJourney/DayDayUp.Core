@@ -1,4 +1,5 @@
-﻿using DesignPattern;
+﻿using CoupangApi;
+using DesignPattern;
 using DesignPattern.Command;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -215,17 +216,15 @@ namespace MainConsole
 
         static async Task Main(string[] args)
         {
-
+            {
+                RequestAction.Test();
+            }
             var a = new A1 { name = "1", num = null, aaa = new A2 { name = "1" } };
             var a2 = new A2();
 
             var a1 = JsonConvert.SerializeObject(a);
             a2 = JsonConvert.DeserializeObject<A2>(a1);
             var a123 = a2;
-
-
-
-
 
             //Console.WriteLine($"1,当前线程 {Thread.CurrentThread.ManagedThreadId}");
             //await TestAsync();

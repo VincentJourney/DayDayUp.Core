@@ -1,8 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Security.Cryptography;
+using Model;
 
-namespace CoupangApi
+namespace RestSharpClient
 {
     public class Hmac
     {

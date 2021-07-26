@@ -217,7 +217,9 @@ namespace MainConsole
         static async Task Main(string[] args)
         {
             {
-                RequestAction.Test();
+                //RequestAction.Test();
+                var res = await ApiCollection.GetOrdersheets("", null);
+                var asd= res;
             }
             var a = new A1 { name = "1", num = null, aaa = new A2 { name = "1" } };
             var a2 = new A2();

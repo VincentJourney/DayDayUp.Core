@@ -8,6 +8,9 @@ using RestSharp;
 
 namespace RestSharpClient
 {
+    /// <summary>
+    /// 客户端工厂类
+    /// </summary>
     public class RestSharpClientFactory
     {
         /// <summary>
@@ -22,6 +25,7 @@ namespace RestSharpClient
 
         static RestSharpClientFactory()
         {
+            ServicePointManager.DefaultConnectionLimit = 256;
         }
 
         /// <summary>

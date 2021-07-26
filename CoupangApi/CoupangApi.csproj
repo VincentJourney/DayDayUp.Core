@@ -5,8 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Model\Response\" />
-    <Folder Include="Model\Request\" />
+    <ProjectReference Include="..\Model\Model.csproj" />
+    <ProjectReference Include="..\RestSharpClient\RestSharpClient.csproj" />
   </ItemGroup>
 
 </Project>

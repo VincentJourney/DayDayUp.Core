@@ -1,29 +1,91 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Reflection;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
+using Model;
 using RestSharp;
+using RestSharp.Serialization.Json;
 
 namespace RestSharpClient
 {
     public static class RestSharpExtensions
     {
-        public static async Task Get<T>(this RestClient client, T requestModel) where T : class
+        public static async Task<BaseResponse<T>> GetAsync<T>(this RestClient client, string resource, object requestModel) where T : class
         {
-            var req = new RestRequest();
-            req = req.AddQueryParameter(requestModel);
-            req.Method = Method.GET;
-            var res = await client.ExecuteAsync(req);
-            Console.WriteLine(res.Content);
+            var response = new BaseResponse<T>();
+            try
+            {
+                var method = Method.GET;
+                IRestRequest req = new RestRequest(resource, method)
+                   .AddQueryParameter(requestModel)
+                   .AddAuthorization(method, resource);
+
+                var res = await client.ExecuteAsync<BaseResponse<T>>(req);
+
+                if (res.StatusCode != HttpStatusCode.OK || !res.IsSuccessful)
+                {
+                    response.Code = (int)res.StatusCode;
+                    response.Message = res.GetResponseErrorMessage();
+                    return response;
+                }
+
+                return res.Data;
+            }
+            catch (Exception ex)
+            {
+                response.Code = (int)HttpStatusCode.BadRequest;
+                response.Message = ex.Message;
+            }
+
+            return response;
         }
 
-        private static RestRequest AddQueryParameter<T>(this RestRequest restRequest, T requestModel) where T : class
+        public static async Task<BaseResponse<T>> PostAsync<T>(this RestClient client, string resource, object requestModel) where T : class
         {
+            var response = new BaseResponse<T>();
+            try
+            {
+                var method = Method.POST;
+                IRestRequest req = new RestRequest(resource, method)
+                   .AddJsonBody(requestModel)
+                   .AddAuthorization(method, resource);
+
+                var res = await client.ExecuteAsync<BaseResponse<T>>(req);
+
+                if (res.StatusCode != HttpStatusCode.OK || !res.IsSuccessful)
+                {
+                    response.Code = (int)res.StatusCode;
+                    response.Message = res.GetResponseErrorMessage();
+                    return response;
+                }
+
+                return res.Data;
+            }
+            catch (Exception ex)
+            {
+                response.Code = (int)HttpStatusCode.BadRequest;
+                response.Message = ex.Message;
+            }
+
+            return response;
+        }
+
+        private static IRestRequest AddQueryParameter(this IRestRequest restRequest, object requestModel)
+        {
+            if (requestModel == null)
+            {
+                return restRequest;
+            }
+
             var properties = requestModel.GetType().GetProperties();
             foreach (var property in properties)
             {
-                var name = property.Name.ToCamel();
                 object value = property.GetValue(requestModel);
+                if (value == null) continue;
+
                 string valueAsString;
                 if (value is DateTime dtValue)
                 {
@@ -34,15 +96,34 @@ namespace RestSharpClient
                     valueAsString = value.ToString();
                 }
 
-                restRequest.AddQueryParameter(name, valueAsString);
+                restRequest.AddQueryParameter(property.Name, valueAsString);
             }
 
             return restRequest;
         }
 
-        private static string ToCamel(this string sentence)
+        private static IRestRequest AddAuthorization(this IRestRequest req, Method method, string resource)
         {
-            return sentence.FirstOrDefault().ToString().ToLower() + sentence.Substring(1);
+            var query = string.Empty;
+            if (method == Method.GET)
+            {
+                query = $"{string.Join("&", req.Parameters.Where(s => s.Type == ParameterType.QueryString))}";
+            }
+
+            var hmac = Hmac.Get(resource, method.ToString(), query);
+            req.AddHeader("Authorization", hmac);
+
+            return req;
+        }
+
+        private static string GetResponseErrorMessage(this IRestResponse res)
+        {
+            return $@"
+[Url] : {res.ResponseUri.ToString()} 
+[HttpStatusCode] ：{res.StatusCode }
+[ErrorMessage] : {res.ErrorMessage} 
+[Content]：{res.Content}
+";
         }
     }
 }

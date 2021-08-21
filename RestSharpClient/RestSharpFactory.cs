@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Linq;
 using System.Net;
-using System.Reflection;
-using System.Threading.Tasks;
 using RestSharp;
 
 namespace RestSharpClient

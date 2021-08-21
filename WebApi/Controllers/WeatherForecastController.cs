@@ -20,14 +20,18 @@ namespace WebApi.Controllers
 
         private readonly ILogger<WeatherForecastController> _logger;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        private readonly IListingExcutor _listingExcutor;
+
+        public WeatherForecastController(ILogger<WeatherForecastController> logger, EngineFactory engineFactory)
         {
             _logger = logger;
+            _listingExcutor = engineFactory.Create<AeEngine>();
         }
 
         [HttpGet]
         public IEnumerable<WeatherForecast> Get()
         {
+            _listingExcutor.Excute("1");
             var rng = new Random();
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {

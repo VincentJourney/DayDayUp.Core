@@ -32,6 +32,13 @@ namespace WebApi
             services.AddControllers();
             services.AddSingleton(typeof(Dispatcher.Dispatcher));
             services.AddSingleton(typeof(SubscribeInvoker));
+            
+            services.AddEngineService(x =>
+            {
+                x.UseAeEngine();
+            });
+            services.AddEngineFactory();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebApi", Version = "v1" });

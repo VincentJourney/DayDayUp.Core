@@ -1,29 +1,18 @@
-﻿using CoupangApi;
-using DesignPattern;
-using DesignPattern.Command;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Concurrent;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Security.Principal;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-
-using TaskUnitTest;
+using CoupangApi;
+using Newtonsoft.Json;
 
 namespace MainConsole
 {
     class Program
     {
+
         public static Expression<Func<TEntity, bool>> ExpresstionExtension<TEntity, TParams>(string entityProportyName, IEnumerable<TParams> dataSource, int pageSize = 1000)
         {
             var param = dataSource.FirstOrDefault();
@@ -214,12 +203,57 @@ namespace MainConsole
             public A2? aaa { get; set; }
         }
 
+
+        /// <summary>
+        /// 分页
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="pageAction"></param>
+        /// <param name="pageSize"></param>
+        public static void ParallelPagingProcess<TSource>(IEnumerable<TSource> source, Action<IEnumerable<TSource>> pageAction, int pageSize)
+        {
+            if (source == null) throw new ArgumentNullException(nameof(source));
+
+            if (pageAction == null) throw new ArgumentNullException(nameof(pageAction));
+
+            if (pageSize <= 0) throw new ArgumentOutOfRangeException(nameof(source), "页大小必须大于0");
+
+            decimal count = source.Count();
+            if (count == 0) return;
+
+            var pageNum = (int)Math.Ceiling((count / pageSize));
+
+            Parallel.For(0, pageNum,
+                  new ParallelOptions { MaxDegreeOfParallelism = 12 },
+                i =>
+                {
+                    pageAction(source.Skip(i * pageSize).Take(pageSize));
+                });
+        }
+
         static async Task Main(string[] args)
         {
             {
+                //var root = new Builder()
+                //          .Add(new AeSource())
+                //          .Add(new EbaySource())
+                //          .Build();
+
+                //var aes = new AeEngine(root);
+                //aes.Excute("Ae");
+            }
+
+            {
+                using (var student = Student.CreateInstance("123"))
+                {
+                    student.Do();
+                }
+            }
+            {
                 //RequestAction.Test();
                 var res = await ApiCollection.GetOrdersheets("", null);
-                var asd= res;
+                var asd = res;
             }
             var a = new A1 { name = "1", num = null, aaa = new A2 { name = "1" } };
             var a2 = new A2();
@@ -248,6 +282,49 @@ namespace MainConsole
 
             Console.ReadLine();
         }
+    }
 
+    public class Student : IDisposable
+    {
+
+        /// <summary>
+        /// 刊登批号
+        /// </summary>
+        private string _batchCode;
+
+
+        public void Dispose()
+        {
+            _batchCode = string.Empty;
+            Console.WriteLine(nameof(Dispose) + _batchCode);
+        }
+
+        private Student(string batchCode)
+        {
+            _batchCode = batchCode;
+            Console.WriteLine(nameof(Student) + _batchCode);
+        }
+
+
+        public static Student CreateInstance(string code)
+        {
+            var s = new Student(code);
+            return s;
+        }
+
+        public string BatchCode { get => _batchCode; }
+
+        public void Do()
+        {
+            Console.WriteLine(nameof(Do));
+            // throw new Exception("123");
+        }
+    }
+    public static class asd
+    {
+        public static void Do1(this Student student)
+        {
+            student.Do();
+        }
     }
 }

@@ -34,7 +34,7 @@ namespace CoupangApi
                 Status = "INSTRUCT",
                 CreatedAtFrom = new DateTime(2021, 7, 1),
                 CreatedAtTo = new DateTime(2021, 7, 31),
-                MaxPerPage = 2
+                MaxPerPage = 2,
             };
 
             return await RestClient.PostAsync<List<OrderSheets>>(resource, orderSheetsRequest);

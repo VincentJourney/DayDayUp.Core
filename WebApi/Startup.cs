@@ -32,12 +32,12 @@ namespace WebApi
             services.AddControllers();
             services.AddSingleton(typeof(Dispatcher.Dispatcher));
             services.AddSingleton(typeof(SubscribeInvoker));
-            
-            services.AddEngineService(x =>
+
+            services.AddListingService(x =>
             {
                 x.UseAeEngine();
+                x.UseEbayEngine();
             });
-            services.AddEngineFactory();
 
             services.AddSwaggerGen(c =>
             {

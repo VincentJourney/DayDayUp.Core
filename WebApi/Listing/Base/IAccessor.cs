@@ -5,21 +5,30 @@ using System.Text;
 
 namespace WebApi
 {
-    public interface IRoot
+    public interface IAccessor
     {
         IEnumerable<IListingExcutor> this[string key] { get; set; }
 
-        T GetSection<T>(string key);
     }
-    public class Root : IRoot
+
+    public class Accessor : IAccessor
     {
+        public Accessor(IList<IProvider> providers)
+        {
+            _providers = providers;
+            foreach (var provider in providers)
+            {
+                provider.Load();
+            }
+        }
+
         public IEnumerable<IListingExcutor> this[string key]
         {
             get
             {
-                for (int i = this._providers.Count - 1; i >= 0; i--)
+                for (int i = _providers.Count - 1; i >= 0; i--)
                 {
-                    IProvider configurationProvider = this._providers[i];
+                    IProvider configurationProvider = _providers[i];
                     if (configurationProvider.TryGet(key, out var result))
                     {
                         return result;
@@ -29,11 +38,11 @@ namespace WebApi
             }
             set
             {
-                if (!this._providers.Any<IProvider>())
+                if (!_providers.Any<IProvider>())
                 {
                     throw new InvalidOperationException();
                 }
-                foreach (IProvider configurationProvider in this._providers)
+                foreach (IProvider configurationProvider in _providers)
                 {
                     configurationProvider.Set(key, value);
                 }
@@ -42,26 +51,6 @@ namespace WebApi
 
         private readonly IList<IProvider> _providers;
 
-        public IEnumerable<IProvider> Providers
-        {
-            get
-            {
-                return this._providers;
-            }
-        }
-        public Root(IList<IProvider> providers)
-        {
-            _providers = providers;
-            foreach (var provider in providers)
-            {
-                provider.Load();
-            }
-        }
-
-        public T GetSection<T>(string key)
-        {
-
-            return default;
-        }
+        public IEnumerable<IProvider> Providers { get => _providers; }
     }
 }

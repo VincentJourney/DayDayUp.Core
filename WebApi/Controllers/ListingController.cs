@@ -26,12 +26,6 @@ namespace WebApi.Controllers
         public IActionResult GetAe()
         {
             _aeListingExcutor.Excute("ae");
-            var aeengine = _aeListingExcutor as AeEngine;
-            Console.WriteLine(aeengine.GetHashCode());
-            foreach (var item in aeengine._listingExcutors)
-            {
-                Console.WriteLine(item.GetHashCode());
-            }
             return Ok();
         }
 
@@ -39,12 +33,6 @@ namespace WebApi.Controllers
         public IActionResult GetEbay()
         {
             _ebayListingExcutor.Excute("ebay");
-            var ebayengine = _ebayListingExcutor as EbayEngine;
-            Console.WriteLine(ebayengine.GetHashCode());
-            foreach (var item in ebayengine._listingExcutors)
-            {
-                Console.WriteLine(item.GetHashCode());
-            }
             return Ok();
         }
     }

@@ -7,9 +7,9 @@ namespace WebApi
 {
     public abstract class AbstactEngine : IListingExcutor
     {
-        public readonly IEnumerable<IListingExcutor> _listingExcutors;
+        private readonly IEnumerable<IListingExcutor> _listingExcutors;
 
-        public abstract string Platform { get; }
+        protected abstract string Platform { get; }
 
         public AbstactEngine(IAccessor root)
         {

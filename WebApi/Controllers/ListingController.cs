@@ -13,26 +13,24 @@ namespace WebApi.Controllers
     [Route("[controller]")]
     public class ListingController : ControllerBase
     {
-        private readonly IListingExcutor _aeListingExcutor;
-        private readonly IListingExcutor _ebayListingExcutor;
+        private readonly EngineFactory _engineFactory;
 
         public ListingController(EngineFactory engineFactory)
         {
-            _aeListingExcutor = engineFactory.Create<AeEngine>();
-            _ebayListingExcutor = engineFactory.Create<EbayEngine>();
+            _engineFactory = engineFactory;
         }
 
         [HttpGet("GetAe")]
         public IActionResult GetAe()
         {
-            _aeListingExcutor.Excute("ae");
+            _engineFactory.Create<AeEngine>().Excute("Ae");
             return Ok();
         }
 
         [HttpGet("GetEbay")]
         public IActionResult GetEbay()
         {
-            _ebayListingExcutor.Excute("ebay");
+            _engineFactory.Create<EbayEngine>().Excute("Ebay");
             return Ok();
         }
     }

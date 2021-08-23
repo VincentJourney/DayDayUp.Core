@@ -8,22 +8,36 @@ namespace WebApi
     public interface IProvider
     {
         void Load();
-        void Set(string key, IEnumerable<IListingExcutor> value);
-        bool TryGet(string key, out IEnumerable<IListingExcutor> value);
+
+        bool TryGet(Platform key, out IEnumerable<IListingExcutor> value);
     }
 
     public abstract class BaseProvider : IProvider
     {
-        protected IDictionary<string, IEnumerable<IListingExcutor>> Data = new Dictionary<string, IEnumerable<IListingExcutor>>();
+        protected IServiceProvider ServiceProvider { get; }
 
-        public bool TryGet(string key, out IEnumerable<IListingExcutor> value)
+        protected IDictionary<Platform, IEnumerable<Type>> Data { get; } = new Dictionary<Platform, IEnumerable<Type>>();
+
+        public BaseProvider(IServiceProvider serviceProvider)
         {
-            return Data.TryGetValue(key, out value);
+            ServiceProvider = serviceProvider;
         }
 
-        public void Set(string key, IEnumerable<IListingExcutor> value)
+        public bool TryGet(Platform key, out IEnumerable<IListingExcutor> value)
         {
-            Data.Add(key, value);
+            IList<IListingExcutor> excutors = new List<IListingExcutor>();
+            value = excutors;
+            var result = Data.TryGetValue(key, out var types);
+            if (!result)
+            {
+                return result;
+            }
+
+            foreach (var item in types)
+            {
+                excutors.Add((IListingExcutor)ServiceProvider.GetService(item));
+            }
+            return true;
         }
 
         public virtual void Load() { }

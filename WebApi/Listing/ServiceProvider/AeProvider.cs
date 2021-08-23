@@ -7,18 +7,20 @@ namespace WebApi
 {
     public class AeProvider : BaseProvider
     {
-        private readonly string _platform = "Ae";
+        public AeProvider(IServiceProvider serviceProvider) : base(serviceProvider)
+        {
+        }
 
         public override void Load()
         {
-            Data.Add(_platform, GetListingExcutors());
+            Data.Add(Platform.Ae, GetListingExcutors());
         }
 
-        public IEnumerable<IListingExcutor> GetListingExcutors()
+        public IEnumerable<Type> GetListingExcutors()
         {
-            return new List<IListingExcutor> {
-                 new AeCreateSkuExcutor(),
-                new AeEnqueueExcutor()
+            return new List<Type> {
+                 typeof( AeCreateSkuExcutor),
+                typeof( AeEnqueueExcutor)
             };
         }
     }

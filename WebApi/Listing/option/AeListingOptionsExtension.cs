@@ -15,6 +15,8 @@ namespace WebApi
         {
             services.Configure(Configure);
             services.AddTransient<AeEngine>();
+            services.AddTransient<AeCreateSkuExcutor>();
+            services.AddTransient<AeEnqueueExcutor>();
             services.AddTransient<IProvider, AeProvider>();
         }
     }

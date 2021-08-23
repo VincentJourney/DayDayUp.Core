@@ -7,7 +7,7 @@ namespace WebApi
 {
     public class AeEngine : AbstactEngine
     {
-        protected override string Platform { get; } = "Ae";
+        protected override Platform Platform { get; } = Platform.Ae;
         public AeEngine(IAccessor root) : base(root)
         {
         }

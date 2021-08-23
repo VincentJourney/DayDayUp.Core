@@ -2,17 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Extensions.Configuration;
 
 namespace WebApi
 {
     public interface IAccessor
     {
-        IEnumerable<IListingExcutor> this[string key] { get; set; }
-
+        IEnumerable<IListingExcutor> this[Platform key] { get; }
     }
 
     public class Accessor : IAccessor
     {
+        private readonly IList<IProvider> _providers;
+
         public Accessor(IList<IProvider> providers)
         {
             _providers = providers;
@@ -22,35 +24,20 @@ namespace WebApi
             }
         }
 
-        public IEnumerable<IListingExcutor> this[string key]
+        public IEnumerable<IListingExcutor> this[Platform key]
         {
             get
             {
-                for (int i = _providers.Count - 1; i >= 0; i--)
+                foreach (var provider in _providers)
                 {
-                    IProvider configurationProvider = _providers[i];
-                    if (configurationProvider.TryGet(key, out var result))
+                    if (provider.TryGet(key, out var result))
                     {
                         return result;
                     }
                 }
-                return null;
-            }
-            set
-            {
-                if (!_providers.Any<IProvider>())
-                {
-                    throw new InvalidOperationException();
-                }
-                foreach (IProvider configurationProvider in _providers)
-                {
-                    configurationProvider.Set(key, value);
-                }
+
+                throw new NotImplementedException($"[{key}]平台没有实现或无法访问服务");
             }
         }
-
-        private readonly IList<IProvider> _providers;
-
-        public IEnumerable<IProvider> Providers { get => _providers; }
     }
 }

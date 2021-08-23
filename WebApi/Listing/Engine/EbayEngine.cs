@@ -7,7 +7,7 @@ namespace WebApi
 {
     public class EbayEngine : AbstactEngine
     {
-        protected override string Platform { get; } = "Ebay";
+        protected override Platform Platform { get; } = Platform.Ebay;
         public EbayEngine(IAccessor root) : base(root)
         {
         }

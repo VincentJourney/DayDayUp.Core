@@ -7,18 +7,21 @@ namespace WebApi
 {
     public class EbayProvider : BaseProvider
     {
-        private readonly string _platform = "Ebay";
+        public EbayProvider(IServiceProvider serviceProvider) : base(serviceProvider)
+        {
+        }
+
 
         public override void Load()
         {
-            Data.Add(_platform, GetListingExcutors());
+            Data.Add(Platform.Ebay, GetListingExcutors());
         }
 
-        public IEnumerable<IListingExcutor> GetListingExcutors()
+        public IEnumerable<Type> GetListingExcutors()
         {
-            return new List<IListingExcutor> {
-                new EbayCreateSkuExcutor(),
-                new EbayEnqueueExcutor()
+            return new List<Type> {
+               typeof( EbayCreateSkuExcutor),
+               typeof( EbayEnqueueExcutor)
             };
         }
     }

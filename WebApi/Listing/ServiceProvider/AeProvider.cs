@@ -13,10 +13,10 @@ namespace WebApi
 
         public override void Load()
         {
-            Data.Add(Platform.Ae, GetListingExcutors());
+            Data.Add(Platform.Ae, ExcutorSource());
         }
 
-        public IEnumerable<Type> GetListingExcutors()
+        public IEnumerable<Type> ExcutorSource()
         {
             return new List<Type> {
                  typeof( AeCreateSkuExcutor),

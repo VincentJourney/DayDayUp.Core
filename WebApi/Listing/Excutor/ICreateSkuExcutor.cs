@@ -12,8 +12,6 @@ namespace WebApi
     {
         public void Excute(string name)
         {
-            Console.WriteLine(nameof(AeCreateSkuExcutor) + nameof(Excute));
-            Console.WriteLine(name);
         }
     }
 
@@ -21,8 +19,6 @@ namespace WebApi
     {
         public void Excute(string name)
         {
-            Console.WriteLine(nameof(EbayCreateSkuExcutor) + nameof(Excute));
-            Console.WriteLine(name);
         }
     }
 }

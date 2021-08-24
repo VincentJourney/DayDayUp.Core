@@ -11,13 +11,12 @@ namespace WebApi
         {
         }
 
-
         public override void Load()
         {
-            Data.Add(Platform.Ebay, GetListingExcutors());
+            Data.Add(Platform.Ebay, ExcutorSource());
         }
 
-        public IEnumerable<Type> GetListingExcutors()
+        public IEnumerable<Type> ExcutorSource()
         {
             return new List<Type> {
                typeof( EbayCreateSkuExcutor),

@@ -17,7 +17,7 @@ namespace WebApi
             services.AddTransient<EbayEngine>();
             services.AddTransient<EbayCreateSkuExcutor>();
             services.AddTransient<EbayEnqueueExcutor>();
-            services.AddTransient<IProvider, EbayProvider>();
+            services.AddSingleton<IProvider, EbayProvider>();
         }
     }
 }

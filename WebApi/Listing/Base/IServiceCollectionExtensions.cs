@@ -25,8 +25,8 @@ namespace WebApi
                 item.AddServices(services);
             }
 
-            services.AddTransient<IBuilder, Builder>();
-            services.AddTransient<IAccessor>(x =>
+            services.AddSingleton<IBuilder, Builder>();
+            services.AddSingleton<IAccessor>(x =>
             {
                 var builder = x.GetRequiredService<IBuilder>();
                 foreach (var item in x.GetServices<IProvider>())

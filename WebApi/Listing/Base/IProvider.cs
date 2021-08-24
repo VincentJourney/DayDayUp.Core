@@ -28,15 +28,13 @@ namespace WebApi
             IList<IListingExcutor> excutors = new List<IListingExcutor>();
             value = excutors;
             var result = Data.TryGetValue(key, out var types);
-            if (!result)
-            {
-                return result;
-            }
+            if (!result) return result;
 
             foreach (var item in types)
             {
                 excutors.Add((IListingExcutor)ServiceProvider.GetService(item));
             }
+
             return true;
         }
 

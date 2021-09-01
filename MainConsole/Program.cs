@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -7,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using CoupangApi;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace MainConsole
 {
@@ -200,7 +202,7 @@ namespace MainConsole
         {
             public string name { get; set; }
             public int? num { get; set; }
-            public A2? aaa { get; set; }
+            public A2 aaa { get; set; }
         }
 
 
@@ -232,8 +234,129 @@ namespace MainConsole
                 });
         }
 
+        public class asd { public bool A { get; set; } }
+        enum ProductFilter
+        {
+            /// <summary>
+            /// 
+            /// </summary>
+            [Description("live")]
+            Live,
+
+            /// <summary>
+            /// 
+            /// </summary>
+            [Description("inactive")]
+            Inactive,
+
+            /// <summary>
+            /// 
+            /// </summary>
+            [Description("deleted")]
+            Deleted,
+
+            /// <summary>
+            /// 
+            /// </summary>
+            [Description("image-missing")]
+            ImageMissing,
+
+            /// <summary>
+            /// 
+            /// </summary>
+            [Description("pending")]
+            Pending,
+
+            /// <summary>
+            /// 
+            /// </summary>
+            [Description("rejected")]
+            Rejected,
+
+            /// <summary>
+            /// 售罄
+            /// </summary>
+            [Description("sold-out")]
+            SoldOut,
+
+            /// <summary>
+            /// 
+            /// </summary>
+            [Description("Mandatory")]
+            Mandatory,
+        }
+
+        private static List<Phone> GetProducts(List<Phone> phones, int offset, int limit, ref int total)
+        {
+            total = phones.Count();
+            return phones.Skip(offset).Take(limit).ToList();
+        }
+        public class Phone
+        {
+            public int id;
+
+            public DateTime created_time;
+        }
+
         static async Task Main(string[] args)
         {
+            {
+                List<Phone> phones = new List<Phone>();
+                var now = DateTime.Now;
+                for (int i = 0; i < 1100; i++)
+                {
+                    var asdasd = now.AddMinutes(-i);
+                    phones.Add(new Phone { id = 1, created_time = asdasd });
+                }
+                var limit = 50;
+                var offsetLimit = 1000;
+
+                int total = 0;
+                var datetime = DateTime.Now;
+                //{
+                //    int pageIndex = 0;
+                //    do
+                //    {
+                //        var offset = pageIndex * limit;
+                //        var productList = phones.Skip(offset).Take(limit).ToList();
+                //        total = phones.Count;
+                //        if (productList.Count != limit) break;
+
+                //        ++pageIndex;//是否删除成功，没有删除数据页码加一，有删除数据页码 不变
+
+                //        if (pageIndex * limit == offsetLimit)
+                //        {
+                //            datetime = productList.Min(s => s.created_time);
+                //        }
+                //    } while (pageIndex * limit < total && pageIndex * limit < offsetLimit);
+                //}
+
+                var createdAfter = datetime;
+                //var index123123 = 0;
+                //do
+                //{
+                int pageIndex = 0;
+                do
+                {
+                    var offset = pageIndex * limit;
+                    var newphones = phones.Where(s => s.created_time <= createdAfter).ToList();
+                    var productList = newphones.Skip(offset).Take(limit).ToList();
+                    total = newphones.Count; ;
+                    if (productList.Count != limit) break;
+
+                    ++pageIndex;//是否删除成功，没有删除数据页码加一，有删除数据页码 不变
+
+                    if (pageIndex * limit == offsetLimit)
+                    {
+                        createdAfter = productList.Min(s => s.created_time);
+                        pageIndex = 0;
+                    }
+                } while (pageIndex * limit < total && pageIndex * limit < offsetLimit);
+
+                //    index123123++;
+                //} while (total > offsetLimit);
+
+            }
             {
                 //var root = new Builder()
                 //          .Add(new AeSource())
@@ -320,11 +443,42 @@ namespace MainConsole
             // throw new Exception("123");
         }
     }
-    public static class asd
+
+    public class Test
     {
-        public static void Do1(this Student student)
+        [JsonProperty(PropertyName = "dateAdded")]
+        public DateTime dateAdded;
+        [JsonProperty(PropertyName = "lastModified")]
+        public DateTime lastModified;
+
+
+        public Test(DateTime dateAdded, DateTime lastModified)
         {
-            student.Do();
+            this.dateAdded = dateAdded.ToLocalTime();//当反序列化后时间因为时区的原因少8个小时
+            this.lastModified = lastModified.ToLocalTime();
         }
     }
+    public class MyDateTimeConverter : Newtonsoft.Json.JsonConverter
+    {
+        public override bool CanConvert(Type objectType)
+        {
+            return objectType == typeof(DateTime);
+        }
+
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
+
+            return long.TryParse(reader.Value.ToString(), out var epoch)
+
+            ? DateTimeOffset.FromUnixTimeMilliseconds(epoch).DateTime
+
+            : DateTime.Now;
+        }
+
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
 }

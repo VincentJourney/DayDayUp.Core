@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Channels;
-using System.Threading.Tasks;
-
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers
 {
@@ -20,15 +13,15 @@ namespace WebApi.Controllers
             _engineFactory = engineFactory;
         }
 
-        [HttpGet("GetAe")]
-        public IActionResult GetAe()
+        [HttpGet("Ae")]
+        public IActionResult Ae()
         {
             _engineFactory.Create<AeEngine>().Excute("Ae");
             return Ok();
         }
 
-        [HttpGet("GetEbay")]
-        public IActionResult GetEbay()
+        [HttpGet("Ebay")]
+        public IActionResult Ebay()
         {
             _engineFactory.Create<EbayEngine>().Excute("Ebay");
             return Ok();

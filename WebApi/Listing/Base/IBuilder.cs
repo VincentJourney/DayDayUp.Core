@@ -1,29 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace WebApi
 {
     public interface IBuilder
     {
-        IList<IProvider> Sources { get; }
+        IList<IProvider> Providers { get; }
         IBuilder Add(IProvider provider);
         IAccessor Build();
     }
 
     public class Builder : IBuilder
     {
-        public IList<IProvider> Sources { get; } = new List<IProvider>();
+        public IList<IProvider> Providers { get; } = new List<IProvider>();
 
         public IBuilder Add(IProvider source)
         {
-            Sources.Add(source);
+            Providers.Add(source);
             return this;
         }
 
         public IAccessor Build()
         {
-            return new Accessor(Sources);
+            return new Accessor(Providers);
         }
     }
 }
